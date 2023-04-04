@@ -16,8 +16,8 @@ docker rmi anshuhtwt/${image1} anshuhtwt/${image2} anshuhtwt/${image3}
 
 # Build and tag the Docker images
 docker build -t anshuhtwt/${image1}:${tag1} /home/admin/Voting-App/vote/
-docker build -t anshuhtwt/${image2}:${tag2} /home/admin/Voting-App/result/
-docker build -t anshuhtwt/${image3}:${tag3} /home/admin/Voting-App/worker/
+docker build -t anshuhtwt/${image2}:${tag2} /home/admin/Voting-App/worker/
+docker build -t anshuhtwt/${image3}:${tag3} /home/admin/Voting-App/result/
 
 # Push the Docker images to Docker Hub
 docker push anshuhtwt/${image1}:${tag1}
