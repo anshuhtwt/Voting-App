@@ -21,4 +21,4 @@ spec:
     spec:
       containers:
       - name: worker-app
-        image: anshuhtwt/worker-va
+        image: kodekloud/examplevotingapp_worker:v1
