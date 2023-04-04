@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: voting-app-ingress
 spec:
+  ingressClassName: "nginx"
   rules:
   - host: voting.vote.com
     http:
