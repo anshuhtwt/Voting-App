@@ -6,12 +6,10 @@
 
 
 
-* Commad to create cluster
-
-     eksctl create cluster --name cluster-name  \
-     --region <region-name> \
-     --node-type <Instance type> \
-  
+* Commad to create cluster <br>
+     eksctl create cluster --name anshu  \
+     --region ap-south-1 \
+     --node-type t2.small \
   
   
 * Command to delete cluster
