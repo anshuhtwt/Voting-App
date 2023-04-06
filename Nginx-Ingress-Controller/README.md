@@ -1,1 +1,1 @@
-[Download deployment file from](https://kubernetes.github.io/ingress-nginx/deploy/#aws)
+Download deployment file, [click here](https://kubernetes.github.io/ingress-nginx/deploy/#aws)
