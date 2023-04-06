@@ -8,12 +8,12 @@
 
 * Commad to create cluster
 
-eksctl create cluster --name <cluster-name>  \
---region <region-name> \
---node-type <Instance type> \
+     eksctl create cluster --name <cluster-name>  \
+     --region <region-name> \
+     --node-type <Instance type> \
   
   
   
 * Command to delete cluster
   
-eksctl delete cluster <cluster-name> --region <region-name>
+     eksctl delete cluster <cluster-name> --region <region-name>
