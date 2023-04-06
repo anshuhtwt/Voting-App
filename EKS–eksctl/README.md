@@ -8,7 +8,7 @@
 
 * Commad to create cluster
 
-     eksctl create cluster --name <cluster-name>  \
+     eksctl create cluster --name cluster-name  \
      --region <region-name> \
      --node-type <Instance type> \
   
