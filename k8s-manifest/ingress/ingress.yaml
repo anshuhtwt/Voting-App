@@ -6,8 +6,9 @@ metadata:
     nginx.ingress.kubernetes.io/add-base-url: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
-    - host: voting.net
+    - host: voting-vote.com
       http:
         paths:
           - path: /
@@ -17,7 +18,7 @@ spec:
                 name: voting-service
                 port:
                   number: 80
-    - host: result.net
+    - host: voting-result.com
       http:
           paths:
             - path: /
