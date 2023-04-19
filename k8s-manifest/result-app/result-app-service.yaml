@@ -2,16 +2,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: result-service
+  name: service1
   labels:
-    name: result-service
+    name: voting-service
     app: voting-app
 spec:
-  type: NodePort
+  selector:
+    name: voting-app-pod
+    app: voting-app
   ports:
   - port: 80
     targetPort: 80
-    nodePort: 30005
-  selector:
-    name: result-app-pod
-    app: voting-app
+  type: LoadBalancer
