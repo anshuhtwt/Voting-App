@@ -8,23 +8,23 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: voting.net
+    - host: anshuhtwt.vote-app.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: voting-service
+                name: service1
                 port:
                   number: 80
-    - host: result.net
+    - host: anshuhtwt.result-app.com
       http:
           paths:
             - path: /
               pathType: Prefix
               backend:
                 service:
-                  name: result-service
+                  name: service2
                   port:
                     number: 80
