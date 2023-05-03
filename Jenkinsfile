@@ -3,19 +3,53 @@ pipeline {
     }
 
     stages {
-        stage('Build and push Docker images') {
+    stage('Build and Push Docker Images') {
+      steps {
+        dir('vote') {
+          script {
+            def image_name = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_PREFIX}/vote:${DOCKER_IMAGE_TAG}"
+            sh "docker build -t ${image_name} ."
+            sh "docker push ${image_name}"
+          }
+        }
+        
+        dir('result') {
+          script {
+            def image_name = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_PREFIX}/result:${DOCKER_IMAGE_TAG}"
+            sh "docker build -t ${image_name} ."
+            sh "docker push ${image_name}"
+          }
+        }
+      }
+    }
+    
+    stage("Install kubectl on worker nodes"){
             steps {
-                 withDockerRegistry([credentialsId: 'docker-hub', url: ""]) {
-                    script {
-                        def dockerImages = ['image1', 'image2']
-                        for (def imageName in dockerImages) {
-                            def dockerTag = "${env.BUILD_NUMBER}"
-                            def dockerImage = "${DOCKER_HUB_USERNAME}/${imageName}:${dockerTag}"
-                            def dockerFilePath = "Dockerfiles/${imageName}/Dockerfile"
-                            docker.build(dockerImage, "--build-arg BUILD_NUMBER=${dockerTag} -f ${dockerFilePath} .").push()
-                        }
-                    }
-                }
+                sh """
+                    curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+                    chmod +x ./kubectl
+                    ./kubectl version --client
+                """
             }
         }
-                   
+
+    stage('Deploy to Cluster') {
+      steps {
+          sh "aws eks update-kubeconfig --region us-east-1 --name anshuhtwt"
+        script {
+          def kubectl = tool('kubectl')
+          sh "${kubectl} apply -R -f k8s-manifest/voting-app"
+          sh "${kubectl} apply -R -f k8s-manifest/redis"
+          sh "${kubectl} apply -R -f k8s-manifest/postgres"
+          sh "${kubectl} apply -R -f k8s-manifest/worker"
+          sh "${kubectl} apply -R -f k8s-manifest/result-app"
+        }
+      }
+    }
+  }
+
+
+
+
+
+
