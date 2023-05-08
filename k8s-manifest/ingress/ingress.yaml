@@ -15,7 +15,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: service1
+                name: voting-service
                 port:
                   number: 80
     - host: anshuhtwt.result-app.com
