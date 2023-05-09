@@ -1,55 +1,25 @@
 pipeline {
     agent any
-    }
-
-    stages {
-    stage('Build and Push Docker Images') {
-      steps {
-        dir('vote') {
-          script {
-            def image_name = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_PREFIX}/vote:${DOCKER_IMAGE_TAG}"
-            sh "docker build -t ${image_name} ."
-            sh "docker push ${image_name}"
-          }
-        }
-        
-        dir('result') {
-          script {
-            def image_name = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_PREFIX}/result:${DOCKER_IMAGE_TAG}"
-            sh "docker build -t ${image_name} ."
-            sh "docker push ${image_name}"
-          }
-        }
-      }
-    }
     
-    stage("Install kubectl on worker nodes"){
+    environment {
+        IMAGE1 = "voting-app"
+        IMAGE2 = "result-app"
+        ORGANIZATION_NAME = "anshuhtwt"
+        DOCKERHUB_USERNAME = "anshuhtwt"
+        REPOSITORY_TAG1 = "${DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${IMAGE1}:${BUILD_ID}"
+        REPOSITORY_TAG2 = "${DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${IMAGE2}:${BUILD_ID}"
+    }
+   
+    stages {
+        stage ('Build and Push Image') {
             steps {
-                sh """
-                    curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
-                    chmod +x ./kubectl
-                    ./kubectl version --client
-                """
+                withDockerRegistry([credentialsId: 'docker-hub', url: '']) {
+                    sh "docker build -t ${REPOSITORY_TAG1} Voting-App/vote/"
+                    sh "docker push ${REPOSITORY_TAG1}"
+                    sh "docker build -t ${REPOSITORY_TAG2} Voting-App/result/"
+                    sh "docker push ${REPOSITORY_TAG2}"
+                }
             }
         }
-
-    stage('Deploy to Cluster') {
-      steps {
-          sh "aws eks update-kubeconfig --region us-east-1 --name anshuhtwt"
-        script {
-          def kubectl = tool('kubectl')
-          sh "${kubectl} apply -R -f k8s-manifest/voting-app"
-          sh "${kubectl} apply -R -f k8s-manifest/redis"
-          sh "${kubectl} apply -R -f k8s-manifest/postgres"
-          sh "${kubectl} apply -R -f k8s-manifest/worker"
-          sh "${kubectl} apply -R -f k8s-manifest/result-app"
-        }
-      }
     }
-  }
-
-
-
-
-
-
+}
