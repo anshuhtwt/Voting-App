@@ -14,9 +14,9 @@ pipeline {
         stage ('Build and Push Image') {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub', url: '']) {
-                    sh "docker build -t ${REPOSITORY_TAG1} -f Voting-App/vote/ ."
+                    sh "docker build -t ${REPOSITORY_TAG1} -f /var/lib/jenkins/workspace/test_master/Voting-App/vote/ ."
                     sh "docker push ${REPOSITORY_TAG1}"
-                    sh "docker build -t ${REPOSITORY_TAG2} -f Voting-App/result/ ."
+                    sh "docker build -t ${REPOSITORY_TAG2} -f /var/lib/jenkins/workspace/test_master/Voting-App/result/ ."
                     sh "docker push ${REPOSITORY_TAG2}"
                 }
             }
